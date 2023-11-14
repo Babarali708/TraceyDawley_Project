@@ -1,0 +1,267 @@
+﻿
+
+@{
+    Layout = null;
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sign up</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/images/Favicons/C-Fav.jpg">
+
+    <!-- Global stylesheets -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
+    <link href="~/assets/css/icons/icomoon/styles.css" rel="stylesheet" type="text/css">
+    <link href="~/assets/css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="~/assets/css/core.css" rel="stylesheet" type="text/css">
+    <link href="~/assets/css/components.css" rel="stylesheet" type="text/css">
+    <link href="~/assets/css/colors.css" rel="stylesheet" type="text/css">
+    <!-- /global stylesheets -->
+    <!-- Core JS files -->
+    <script type="text/javascript" src="~/assets/js/plugins/loaders/pace.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/core/libraries/jquery.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/core/libraries/bootstrap.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/plugins/loaders/blockui.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/plugins/ui/nicescroll.min.js"></script>
+    <script type="text/javascript" src="~/assets/js/plugins/ui/drilldown.js"></script>
+    <script type="text/javascript" src="~/assets/js/plugins/ui/fab.min.js"></script>
+    <!-- /core JS files -->
+    <!-- Theme JS files -->
+    <script type="text/javascript" src="~/assets/js/plugins/forms/styling/uniform.min.js"></script>
+
+    <script type="text/javascript" src="~/assets/js/plugins/notifications/pnotify.min.js"></script>
+
+
+    <script type="text/javascript" src="~/assets/js/core/app.js"></script>
+    <script type="text/javascript" src="~/assets/js/pages/login.js"></script>
+
+    <script type="text/javascript" src="~/assets/js/plugins/notifications/CustomePnotify.js"></script>
+
+    <script type="text/javascript" src="~/assets/js/plugins/ui/ripple.min.js"></script>
+    <!-- /theme JS files -->
+
+    <style>
+        .form-width {
+            width: 50%!important; 
+        }
+        .btn-width {
+            width: 30%!important; 
+        }
+    </style>
+</head>
+
+<body class="login-container">
+
+    <input type="hidden" id="viewbagMessage" value="@ViewBag.Message">
+    <input type="hidden" id="viewbagColor" value="@ViewBag.Color">
+
+    <!-- Page container -->
+    <div class="page-container">
+
+        <!-- Page content -->
+        <div class="page-content">
+
+            <!-- Main content -->
+            <div class="content-wrapper">
+
+                <!-- Advanced login -->
+                <form action="@Url.Action("PostRegister","Auth")" method="post" class="login-form form-width" enctype="multipart/form-data">
+                    <div class="panel panel-body">
+
+
+                        <div class="text-center">
+                            <h5 class="content-group-lg">Create new account <small class="display-block">Enter your credentials</small></h5>
+                        </div>
+
+                        <div class="form-group has-feedback has-feedback-left">
+                            <input type="text" class="form-control" placeholder="Your First Name" required name="FirstName">
+                            <div class="form-control-feedback">
+                                <i class="icon-user text-muted"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group has-feedback has-feedback-left">
+                            <input type="text" class="form-control" placeholder="Your Last Name" required name="LastName">
+                            <div class="form-control-feedback">
+                                <i class="icon-user text-muted"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group has-feedback has-feedback-left">
+                            <input type="text" class="form-control" placeholder="Contact Number" required name="Contact">
+                            <div class="form-control-feedback">
+                                <i class="icon-phone2 text-muted"></i>
+                            </div>
+                        </div>
+                        <div class="form-group has-feedback has-feedback-left">
+                            <input type="text" class="form-control" placeholder="User Address" required name="Address">
+                            <div class="form-control-feedback">
+                                <i class="icon-location text-muted"></i>
+                            </div>
+                        </div>
+                        <div class="form-group has-feedback has-feedback-left">
+                            <input type="date" class="form-control" placeholder="User Date Of Birth" required name="DateOfBirth">
+                            <div class="form-control-feedback">
+                                <i class="text-muted"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group has-feedback has-feedback-left">
+                            <input type="email" name="Email" class="form-control" placeholder="Email" required onkeyup="validateEmail(this.value)">
+                            <div class="form-control-feedback">
+                                <i class="icon-mail5 text-muted"></i>
+                            </div>
+                            <span id='mailErrMsg' class="text-danger"></span>
+
+                        </div>
+
+                        <div class="form-group has-feedback has-feedback-left">
+                            <input type="password" name="Password" id="password" class="form-control" placeholder="Password" required>
+                            <div class="form-control-feedback">
+                                <i class="icon-lock2 text-muted"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group has-feedback has-feedback-left">
+                            <input type="password" name="_confirmPassword" class="form-control" placeholder="Confirm Password" required onkeyup="matchPassword(this.value)">
+                            <div class="form-control-feedback">
+                                <i class="icon-check text-muted"></i>
+                            </div>
+
+                            <span id='pwErrMsg' class="text-danger"></span>
+
+                        </div>
+                        <div class="form-group has-feedback has-feedback-left">
+                            <input type="file" accept="image/png, image/jpg, image/jpeg"
+                                       class="form-control"
+                                       id="TileImage"
+                                       name="File"
+                                       multiple
+                                       onchange="loadTileFile(event)" />
+                                <p class="mb-0">Allowed JPG, JPEG or PNG. Max size of 2MB</p>
+                        </div>
+
+
+                        <div class="form-group text-center">
+                            <button type="submit" id="subBtn" class="btn bg-pink-400 btn-block btn-width">Sign up <i class="icon-database-add position-right"></i></button>
+                        </div>
+
+
+
+
+                        <a href="@Url.Action("Login","Auth")" class="pull-right content-group text-bold">Back To Sign In</a>
+
+                    </div>
+                </form>
+                <!-- /advanced login -->
+
+            </div>
+            <!-- /main content -->
+
+        </div>
+        <!-- /page content -->
+
+    </div>
+    <!-- /page container -->
+
+
+    <script>
+
+        function validateEmail(email)
+        {
+            if (email != "") {
+                $.ajax({
+                    type: 'POST',
+                    url: "../Ajax/ValidateEmail",
+                    dataType: "json",
+                    data:
+                    {
+                        email: email, id: null
+                    },
+                    success: function (response)
+                    {
+                        if (response == true)
+                        {
+                            $('#mailErrMsg').text("");
+                            $('#subBtn').prop('disabled', false);
+                        }
+                        else {
+                            $('#mailErrMsg').text("Not available, Try another");
+                            $('#subBtn').prop('disabled', true);
+                        }
+                    },
+                    error: function ()
+                    {
+                        $('#mailErrMsg').text("");
+                        $('#subBtn').prop('disabled', false);
+                    }
+                });
+            }
+        }
+
+        function matchPassword(confirmPw) {
+            var newPw = $('#password').val();
+            if (newPw != confirmPw) {
+                $('#pwErrMsg').text("Password & Confirm Password did not match");
+                $('#subBtn').attr("disabled", true);
+            }
+            else {
+                $('#pwErrMsg').text("");
+                $('#subBtn').attr("disabled", false);
+            }
+        }
+    </script>
+
+    <script>
+         function loadTileFile(event) {
+        var files = event.target.files;
+        var validFiles = [];
+
+        for (var i = 0; i < files.length; i++) 
+        {
+            var size = files[i].size / 1024 / 1024; // Size in MB
+            size = size.toFixed(2);
+
+            // Check file size and allowed extensions
+            var allowedExtensions = ['png', 'jpg', 'jpeg'];
+            var fileExtension = files[i].name.split('.').pop().toLowerCase();
+
+            if (size > 0 && size <= 2.01 && allowedExtensions.includes(fileExtension)) 
+            {
+                validFiles.push(files[i]);
+            }
+        }
+
+        
+
+        if (validFiles.length < files.length) 
+        {
+            var invalidFiles = Array.from(files).filter(file => !validFiles.includes(file));
+            var message = "The following files exceed the 2MB size limit or having invalid file type:\n\n";
+            invalidFiles.forEach(file => {
+                message += file.name + "\n";
+            });
+            alert(message);
+        }
+
+        // Create a new FileList object with valid files and assign it to the input element
+        var newFileList = new DataTransfer();
+        validFiles.forEach(file => {
+            newFileList.items.add(file);
+        });
+
+        event.target.files = newFileList.files;
+    }
+
+    </script>
+</body>
+</html>
+
+
+

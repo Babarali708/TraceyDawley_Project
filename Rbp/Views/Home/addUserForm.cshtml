@@ -1,0 +1,62 @@
+﻿
+@{
+    ViewData["Title"] = "addUserForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content">
+
+    <div class="row">
+
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-flat custom-panel">
+              <form id="AddForm" action="@Url.Action("PostAddSurveyResponseData", "Home")" method="post">
+
+    <div class="panel-heading">
+        <h2 class="panel-title text-center text-bold">User Questions</h2>
+    </div>
+
+    <div class="panel-body">
+        <legend class="text-bold text-uppercase"><span class="text-danger">*</span> Fields are mandatory to fill</legend>
+
+        <div class="form-group">
+            <label class="text-bold">Can you e-file my return for me? <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" required name="Question1" placeholder="Enter Details">
+        </div>
+
+        <div class="form-group">
+            <label class="text-bold">How will the stimulus checks impact me?</label>
+            <input type="text" class="form-control"  name="Question2" placeholder="Enter Details">
+        </div>
+
+        <div class="form-group">
+            <label class="text-bold">Do I get a PDF copy for my own records?</label>
+            <input type="text" class="form-control" name="Question3" placeholder="Enter Details">
+        </div>
+
+        <div class="form-group">
+            <label class="text-bold">Can I file multiple years?</label>
+            <input type="text" class="form-control" name="Question4" placeholder="Enter Details">
+        </div>
+
+        <div class="form-group">
+            <label class="text-bold">I’m a US Citizen living abroad, why do I need to file a US tax return? <span class="text-danger">*</span></label>
+            <input type="text" name="Question5" class="form-control"  placeholder="Enter Details" required>
+        </div>
+
+        <div class="text-right">
+            <button type="submit" id="subBtn" class="btn btn-primary">Add <i class="icon-database-insert position-right"></i></button>
+        </div>
+    </div>
+
+</form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+        $('#manageUserQTab1').addClass('active');
+</script>

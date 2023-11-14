@@ -1,0 +1,431 @@
+﻿@{
+    ViewBag.Title = "View User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .table > tbody > tr > td {
+        padding: 5px !important;
+    }
+</style>
+
+
+<div class="modal fade" id="updateModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                   
+                <h5 class="text-center text-bold">Update User</h5>
+               
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form id="UpdateForm" action="@Url.Action("PostUpdateUser","Admin")" method="post">
+
+                    <input type="hidden" name="Id" id="updId" />
+
+
+                    <div class="form-group">
+                        <label class="text-bold">First Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="FirstName" id="updFirstName" placeholder="Please Enter Full Name" required>
+                    </div>  
+                    
+                   @* <div class="form-group">
+                        <label class="text-bold">Middle Name </label>
+                        <input type="text" class="form-control" name="MiddleName" id="updMiddleName" placeholder="Please Enter Full Name">
+                    </div> *@ 
+                    
+                    <div class="form-group">
+                        <label class="text-bold">Last Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="LastName" id="updLastName" placeholder="Please Enter Full Name" required>
+                    </div>                   
+
+                    <div class="form-group">
+                        <label class="text-bold">Contact </label>
+                        <input type="text" class="form-control" onkeypress="isInputNumber(event)" name="Contact" id="updContact" placeholder="Please Enter User Contact Number">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-bold">User Address</label>
+                        <input type="text" class="form-control" id="updAddress" name="UserAddress" placeholder="Enter User Address">
+                    </div>
+                    <div class="form-group">
+                        <label class="text-bold">User Date Of Birth</label>
+                        <input type="date" class="form-control" id="upddob" name="UserDateOfBirth">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="text-bold">Email <span class="text-danger">*</span></label>
+                        <input type="email" name="Email" id="updEmail" class="form-control" onkeyup="validateEmail(this.value)" placeholder="Add Email Here" required>
+                        <span class="text-danger" id="updEmailErrMsg"></span>
+                    </div>
+
+
+
+                    <div class="modal-footer">
+                        <button type="submit" value="submit" class="btn btn-primary" id="updSubBtn">Update</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row m-10">
+    <div class="panel panel-flat text-black custom-panel">
+        <div class="panel-heading" style="background: #E8ECED; padding:1px !important;">
+            <h2 class="text-center text-black">
+                Search
+            </h2>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-action="collapse" class="rotate-180"></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="panel-body pt-20 pb-20" style="display: none">
+            <div class="row">
+
+
+                <div class="col-md-12 col-lg-12" style="padding: 20px;padding-top:20px;">
+                    <div class="form-group">
+                        <label><strong>Email:</strong></label>
+                        <input type="text" class="form-control" id="searchEmail" style="background-color:white" placeholder="Search User Email Here">
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-3 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <button onclick="clearSearch()" class="btn btn-danger btn-block">Reset</button><br>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-12 col-xs-12"></div>
+                <div class="col-md-3 col-sm-12 col-xs-12">
+                    <div class="form-group text-right">
+                        <button onclick="searchTable()" class="btn btn-success btn-block">Search</button><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="panel p-20 m-10">
+
+    <div class="row">
+       
+            <center><u><h3>Users List</h3></u></center>
+       
+    </div>
+
+    <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-2 pull-right btn-block">
+            <a href="@Url.Action("AddUser","Admin")" class="btn btn-primary m-5 pull-right">Add New</a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table text-md-nowrap table-striped table-bordered text-center no-footer" id="userTable">
+            <thead class="bg-indigo-800">
+                <tr>
+                    <th class="text-bold" hidden>...</th>
+                    <th class="text-bold text-center" style="min-width:140px;">
+                        Name
+                    </th>
+                    <th class="text-bold text-center" style="min-width:140px;">
+                        Contact
+                    </th>
+                    <th class="text-bold text-center" style="min-width:150px;">
+                        Email
+                    </th>
+                    
+                    <th class="text-bold text-center" style="min-width:130px">
+                        Action
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+<script>
+
+    var userId = '@ViewBag.userId';
+    loadTable();
+
+    function loadTable(Role, email)
+    {
+        $('#userTable').DataTable(
+        {
+            "ajax":
+            {
+                "url": '@Url.Action("GetSurveyResponseDataTableList", "Ajax")',
+                "type": "POST",
+                "datatype": "json",
+                "data": 
+                {   Role: Role, 
+                    email: email,
+                    userId: userId,
+                }
+            },
+            'columns':
+            [
+                { "data": "hidden", "name": "0" },
+                { "data": "FirstName", "name": "FirstName" },
+                { "data": "Contact", "name": "Contact" },
+                { "data": "Email", "name": "Email" },
+                { "data": "Action", "name": "0" },
+            ],
+            'columnDefs':
+            [
+                {
+                    "targets": 0,
+                    "visible": false,
+                    "searchable": false,
+                    "render": function (data, type, full, meta) 
+                    {
+                        return null;
+                    }
+                },
+                {
+                    "targets": 1,
+                    'className': '',
+                    "render": function (data, type, full, meta)
+                    {
+                        var UserFullName ="";
+                        if (full.middleName == "")
+                        {
+                           UserFullName = full.firstName + " " +  full.lastName;
+                        }
+                        else
+                        {
+                           UserFullName = full.firstName +" "+ full.middleName +" "+ full.lastName;
+                        }
+
+                        return UserFullName;
+                    }
+                },
+                {
+                    "targets": 2,
+                    'className': '',
+                    "render": function (data, type, full, meta)
+                    {
+                        if ($.trim(full.contact) == "")
+                        {
+                            return "<span class='text-danger'>---</span>"
+                        }
+                        else {
+                            return full.contact;
+                        }
+                    }
+                },
+                {
+                    "targets": 3,
+                    'className': '',
+                    "render": function (data, type, full, meta) {
+                        return full.email;
+                    }
+                },
+                {
+                    "targets": 4,
+                    'className': '',
+                    'sortable': false,
+                    "render": function (data, type, full, meta)
+                    {
+                        return '<ul class="icons-list"> ' +
+                            '<li class="dropdown" >' +
+                            '			<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                            '				<i class="icon-menu9"></i>' +
+                            '			</a>' +
+                            '			<ul class="dropdown-menu dropdown-menu-right"  style="padding-left:5px !important; min-width:95px !important;">' +
+                            '				<li>' +
+                                    '                   <button class="btn btn-sm bg-info icon-pencil" onclick="updateFunction(\'' + full.id + '\')" title="Edit"></button>' +
+                                    '                   <button class="btn btn-sm bg-danger icon-bin" onclick="deleteFunction(\'' + full.id + '\')" title="Delete"></button>' +
+                            '               </li>' +
+                            '			</ul>' +
+                            '		</li >' +
+                            '	</ul >';
+                    }
+                },
+            ],
+            "serverSide": "true",
+            "processing": "true",
+            "language":
+            {
+                "processing": "<i class='icon-spinner spinner icon-2x'></i>",
+                "search": "<span>Search :</span> _INPUT_",
+                "searchPlaceholder": "Filter Data",
+                "lengthMenu": "<span>Show :</span> _MENU_",
+                "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+            }
+        });
+    }
+
+
+    function searchTable()
+    {
+        var role = $('#searchRole').val();
+        var email = $('#searchEmail').val();
+
+        $('#userTable').DataTable().clear();
+        $('#userTable').DataTable().destroy();
+
+        loadTable(role, email);
+    }
+
+    function clearSearch()
+    {
+        $('#userTable').DataTable().clear();
+        $('#userTable').DataTable().destroy();
+
+
+        $("#searchRole").val("").change();
+        $('#searchEmail').val("");
+
+        loadTable();
+    }
+
+
+    function updateFunction(id)
+    {
+        $('#updEmailErrMsg').text("");
+        $('#updSubBtn').attr('disabled', false);
+
+        $("#loadImg").show();
+
+        $.ajax({
+            type: 'POST',
+            url: "../Ajax/GetUserById",
+            dataType: "json",
+            data: {
+                id: id
+            },
+            success: function (response)
+            {
+                if (response == 0) {
+                    alert("Record not found, Please reload the page.");
+                }
+
+                $("#updId").val(response.id);
+
+                $("#updFirstName").val(response.firstName);
+                $("#updMiddleName").val(response.middleName);
+                $("#updLastName").val(response.lastName);
+                $("#updEmail").val(response.email);
+                $("#updContact").val(response.contact);
+                $("#updAddress").val(response.address);
+                $("#upddob").val(response.dateOfBirth);
+
+
+                $("#loadImg").hide();
+                $("#updateModal").modal('show');
+            },
+            error: function ()
+            {
+                $("#loadImg").hide();
+
+                alert("ajax Failed");
+            }
+        });
+
+    }
+
+    function validateEmail(email)
+    {
+        var id = $('#updId').val();
+        if (email != "" && id != "")
+        {
+            $.ajax({
+                type: 'POST',
+                url: "../Ajax/ValidateEmail",
+                dataType: "json",
+                data: {
+                    email: email, id: id
+                },
+                success: function (response)
+                {
+                    if (response == true)
+                    {
+                        $('#updEmailErrMsg').text("");
+                        $('#updSubBtn').attr('disabled', false);
+                    }
+                    else {
+                        $('#updEmailErrMsg').text("Duplicate Email");
+                        $('#updSubBtn').attr('disabled', true);
+                    }
+                },
+                error: function ()
+                {
+                    $('#updEmailErrMsg').text("");
+                    $('#updSubBtn').attr('disabled', false);
+
+                    alert("Ajax failed");
+                }
+            });
+        }
+
+    }
+
+
+    function deleteFunction(id) {
+        $('#confirmModalHeading').text('Warning!');
+        $('#confirmModalHeader').removeClass('bg-success');
+        $('#confirmModalHeader').addClass('bg-danger');
+        $('#confirmModalText').empty();
+        $('#confirmModalText').append('Do you really want to delete this user?<br />' +
+            'This record is going to permanently delete from our system.<br />' +
+            'The action cannot be undone.');
+
+        $("#confirmModalForm").attr("action", "../Admin/DeleteUser?id=" + id);
+
+        $('#confirmModal').modal('show');
+    }
+
+</script>
+
+<script>
+    $("#toggle").change(function () {
+
+        // Check the checkbox state
+        if ($(this).is(':checked')) {
+            // Changing type attribute
+            $("#updPassword").attr("type", "text");
+
+            // Change the Text
+            $("#toggleText").text("Hide");
+        } else {
+            // Changing type attribute
+            $("#updPassword").attr("type", "password");
+
+            // Change the Text
+            $("#toggleText").text("Show");
+        }
+
+    });
+</script>
+
+<script>
+      $('#manageUserTab2').addClass('active');
+</script>
+<script>
+
+    const UpdateForm = document.getElementById('UpdateForm');
+    const uploadButton = document.getElementById('updSubBtn');
+    UpdateForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        uploadButton.disabled = true;
+        UpdateForm.submit();
+
+    });
+</script>

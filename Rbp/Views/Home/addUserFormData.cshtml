@@ -1,0 +1,308 @@
+﻿@{
+    ViewData["Title"] = "addUserFormData";
+    Layout = "~/Views/Shared/_UserLayout.cshtml";
+}
+
+<div id="error"></div>
+<div class="content">
+    <!-- MAIN sTART -->
+    <main class="animate position-relative">
+        <!-- Header Section -->
+        <header  class="mb-md-5">
+            <!-- Logo and Phone Info -->
+            <div class="logo">
+                <!-- Logo Image -->
+                <img src="~/Userassets/images/icon.png" alt="Icon" />Tracey Dawley.
+            </div>
+            <a href="@Url.Action("Logout","Auth")" style="cursor: pointer;" class="phoneInfo">
+                <!-- Phone Details -->
+                <article>
+
+                    <p style="cursor:pointer">Logout</p>
+                </article>
+            </a>
+        </header>
+
+        <!-- Main Content Container -->
+        <div class="container mt-7">
+            <div class="row p-0 m-0">
+                <!-- Left Column -->
+                <div class="col-md-4 order_c">
+
+                    <aside>
+
+                        <img src="~/Userassets/images/tracey_Image.jpeg" alt="aside" class="sideImg" />
+
+                    </aside>
+                </div>
+
+                <!-- Right Column -->
+                <div class="col-md-8 p-0 m-0">
+                    <!-- Review Form -->
+                    <form id="rating" class="ratingMain" method="post" action="@Url.Action("PostAddSurveyResponseData","Home")">
+                        <div class="row">
+                            <!-- Rating Input -->
+                            <div class="col-md-12">
+                                <div class="inputField">
+                                    <label class="labelHeading">
+                                        How would you rate your experience?
+                                    </label>
+                                    <!-- Star Ratings -->
+                                    <div class="rating">
+                                        <div class="ratingSingle" onclick="GetFirstRatingValue(this)" id="R1" title="Poor"></div>
+                                        <div class="ratingSingle" onclick="GetFirstRatingValue(this)" id="R1" title="Average"></div>
+                                        <div class="ratingSingle" onclick="GetFirstRatingValue(this)" id="R1" title="Good "></div>
+                                        <div class="ratingSingle" onclick="GetFirstRatingValue(this)" id="R1" title="Satisfying"></div>
+                                        <div class="ratingSingle" onclick="GetFirstRatingValue(this)" id="R1" title="Excelent"></div>
+                                        <input hidden id="rating_One" name="Question1" />
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="inputField">
+                                    <label class="labelHeading">
+                                        How would you rate your experience with us?
+                                    </label>
+                                    <!-- Star Ratings -->
+                                    <div class="rating">
+                                        <div class="ratingSingle" onclick="GetSecondRatingValue(this)" title="Poor"></div>
+                                        <div class="ratingSingle" onclick="GetSecondRatingValue(this)" title="Average"></div>
+                                        <div class="ratingSingle" onclick="GetSecondRatingValue(this)" title="Good"></div>
+                                        <div class="ratingSingle" onclick="GetSecondRatingValue(this)" title="Satisfying"></div>
+                                        <div class="ratingSingle" onclick="GetSecondRatingValue(this)" title="Excellent"></div>
+                                        @*<span class="avgRating">Make the Rating!</span>*@
+                                        <input hidden  id="rating_two" name="Question2" />
+                                    
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dropdown for Location -->
+                            <div class="col-md-12">
+                                <div class="inputField">
+                                    <label class="labelHeading"> When did you go? </label>
+                                    <select name="Question3" required>
+                                        <option value="">Select one</option>
+                                        <option value="Pakistan">Pakistan</option>
+                                        <option value="Bangladesh">Bangladesh</option>
+                                        <option value="India">India</option>
+                                    </select>
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="inputField">
+                                    <label class="labelHeading"> Where you want to go? </label>
+                                    <select name="Question4" required>
+                                        <option value="">Select one</option>
+                                        <option value="Pakistan">Pakistan</option>
+                                        <option value="Bangladesh">Bangladesh</option>
+                                        <option value="India">India</option>
+                                    </select>
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </div>
+                            </div>
+
+                            <!-- Radio Buttons for Travel Type -->
+                            <div class="col-md-12">
+                                <div class="inputField">
+                                    <label class="labelHeading"> Who did you go with? </label>
+                                    <div class="d-flex align-itmes-center flex-wrap">
+                                        <div class="radioField">
+                                            <input type="radio" name="Question5" value="Business" />
+                                            <label class="radioFieldlabels">Business</label>
+                                        </div>
+                                        <div class="radioField">
+                                            <input type="radio" name="Question5" value="Couples" />
+                                            <label class="radioFieldlabels">Couples</label>
+                                        </div>
+                                        <div class="radioField">
+                                            <input type="radio" name="Question5" value="Family" />
+                                            <label class="radioFieldlabels">Family</label>
+                                        </div>
+                                        <div class="radioField">
+                                            <input type="radio" name="Question5" value="Trip" />
+                                            <label class="radioFieldlabels">Trip</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Radio Buttons for whom you want to go with -->
+                            <div class="col-md-12">
+                                <div class="inputField">
+                                    <label class="labelHeading"> with whom you want to go with? </label>
+                                    <div class="d-flex align-itmes-center flex-wrap">
+                                        <div class="radioField">
+                                            <input type="radio" name="Question6" value="Business" />
+                                            <label class="radioFieldlabels">Business</label>
+                                        </div>
+                                        <div class="radioField">
+                                            <input type="radio" name="Question6" value="Couples" />
+                                            <label class="radioFieldlabels">Couples</label>
+                                        </div>
+                                        <div class="radioField">
+                                            <input type="radio" name="Question6" value="Family" />
+                                            <label class="radioFieldlabels">Family</label>
+                                        </div>
+                                        <div class="radioField">
+                                            <input type="radio" name="Question6" value="Trip" />
+                                            <label class="radioFieldlabels">Trip</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Review Title Input -->
+                            <div class="col-md-12">
+                                <div class="inputField">
+                                    <label class="labelHeading"> Title your review </label>
+                                    <input type="text" id="review" onkeyup="" name="review" placeholder="Give us the gist of your experience" />
+                                </div>
+                                @*<span class="maxChar">
+                                <span class="count">0</span>/<span class="tillcount"
+                                >120</span
+                                >
+                                max characters
+                                </span>*@
+                            </div>
+                            <div class="col-md-12">
+                                <div class="inputField">
+                                    <label class="labelHeading"> Title your Experience </label>
+                                    <input class="form-group" type="text" id="review2" name="review" placeholder="Give us the gist of your experience" />
+                                </div>
+
+                            </div>
+
+                            <input hidden name="UserId" value="@ViewBag.loggedinUserId" />
+                            <input hidden name="Question7" id="Question7" />
+                            <input hidden name="Question8" id="Question8" />
+                            <!-- Submit Button -->
+                            <div class="col-md-12">
+                                <button id="sub" type="submit" style="margin-left:25%!important" class="apply">Submit review</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="~/Userassets/js/bootstrap/bootstrap.min.js"></script>
+
+    <!-- jQuery -->
+    <script src="~/Userassets/js/jQuery/jquery-3.7.0.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="~/Userassets/js/custom.js"></script>
+
+</div>
+
+
+@*<script>
+    var ratingElements = document.querySelectorAll('.ratingSingle');
+        ratingElements.forEach(function (element) {
+        element.addEventListener('click', function () {
+            debugger;
+            var ratingValue = element.getAttribute('title');
+            document.getElementById('rating_One').value = '';
+            document.getElementById('rating_One').value = ratingValue;
+        });
+    });
+</script>
+<script>
+    var ratingElements = document.querySelectorAll('.ab');
+        ratingElements.forEach(function (element) {
+        element.addEventListener('click', function () {
+            debugger;
+            var ratingValue = element.getAttribute('title');
+            document.getElementById('rating_two').value = '';
+            document.getElementById('rating_two').value = ratingValue;
+        });
+    });
+</script>
+*@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Keyup event for the first input field
+        $('#review:first').on('keyup', function () {
+            var value1 = $(this).val();
+            $('#Question7').val(value1);
+        });
+
+       
+    });
+    $(document).ready(function () {
+        // Keyup event for the second input field
+        $('#review2').on('keyup', function () {
+            var value2 = $(this).val();
+            $('#Question8').val(value2);
+        });
+
+       
+    });
+</script>
+<script>
+
+    function GetFirstRatingValue(element) {
+            debugger;
+           // var ratingValue = $(this).attr('title');
+        var ratingValue = element.getAttribute('title');
+        console.log(ratingValue);
+            $('#rating_One').val("");
+            $('#rating_One').val(ratingValue);
+            debugger; // Optional: You can remove this line if you don't need to debug
+        }
+
+    function GetSecondRatingValue(element) {
+        debugger;
+        var ratingValue = element.getAttribute('title');
+        $('#rating_two').val("");
+        $('#rating_two').val(ratingValue);
+        debugger; // Optional: You can remove this line if you don't need to debug
+    }
+
+
+</script>
+
+        <script>
+    $(document).ready(function () {
+        $("#rating").submit(function (event) {
+            // Validate Rating
+            if ($("#rating_One").val() === "" || $("#rating_two").val() === "") {
+                alert("Please fill out rating fields.");
+                event.preventDefault(); // Prevent form submission
+                return;
+            }
+
+            // Validate Dropdowns
+            if ($("select[name='Question3']").val() === "" || $("select[name='Question4']").val() === "") {
+                alert("Please select options from selection fields");
+                event.preventDefault(); // Prevent form submission
+                return;
+            }
+
+            // Validate Radio Buttons
+            if ($("input[name='Question5']:checked").length === 0 || $("input[name='Question6']:checked").length === 0) {
+                alert("Please fillout the radio button fields ");
+                event.preventDefault(); // Prevent form submission
+                return;
+            }
+
+            // Validate Text Inputs
+            if ($("#review").val().trim() === "" || $("#review2").val().trim() === "") {
+                alert("Please enter review titles.");
+                event.preventDefault(); // Prevent form submission
+                return;
+            }
+
+            // All fields are validated, you can submit the form
+            // If you want to submit the form using AJAX, you can do it here
+
+        });
+    });
+
+        </script>

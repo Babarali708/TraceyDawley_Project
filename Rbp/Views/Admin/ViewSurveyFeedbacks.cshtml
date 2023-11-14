@@ -1,0 +1,414 @@
+﻿@{
+    ViewBag.Title = "View Feedbacks";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .table > tbody > tr > td {
+        padding: 5px !important;
+    }
+
+    .dataTable thead .sorting_asc::after {
+        display: none;
+    }
+
+    .dataTables_filter {
+        display: none;
+    }
+</style>
+
+
+@*<div class="modal fade" id="updateModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="text-center text-bold">Update Business Center</h5>
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form id="UpdateForm" action=" @Url.Action("PostUpdateBusinessCenter","BusinessCenter")" method="post">
+
+                    <input type="hidden" name="Id" id="updId" />
+
+                    <div class="form-group col-md-12">
+                        <label class="text-bold">Name<span class="text-danger">*</span></label>
+                        <input onkeyup="validateName(this.value)" maxlength="20" type="text" class="form-control" required id="Name" name="Name" placeholder="Enter Name">
+                        <span class="text-danger" id="NameErrMsg"></span>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" value="submit" class="btn btn-primary" id="updSubBtn">Update</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+<div class="row m-10">
+    <div class="panel panel-flat text-black">
+        <div class="panel-heading" style="background: #E8ECED; padding:1px !important;">
+            <h2 class="text-center text-black">
+                Search
+            </h2>
+            <div class="heading-elements">
+                <ul class="icons-list">
+                    <li><a data-action="collapse" class="rotate-180"></a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="panel-body pt-20 pb-20" style="display: none">
+            <div class="row">
+                <div class="col-md-6 col-lg-6" style="padding: 20px;padding-top:20px;">
+                    <div class="row form-group">
+                        <label class=" text-bold control-label display-block">User Name:<span class="text-danger" required></span></label>
+                        <div class="form-group bg-lightgrey pl-10">
+                            <select id="searchUserValue" data-placeholder="Select User" class="select form-control form-select">
+                                <option></option>
+                                <optgroup label="Select Category">
+                                    @if (ViewBag.SurveyFeedbacks != null)
+                                    {
+                                        foreach (var item in ViewBag.SurveyFeedbacks)
+                                        {
+                                            <option value="@item.Id">@item.FirstName &nbsp;@item.LastName</option>
+                                        }
+                                    }
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-6 col-lg-6" style="padding: 20px;padding-top:20px;">
+                </div>
+
+
+            </div>
+            <div class="row">
+                <div class="col-md-3 col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <button onclick="clearSearch()" class="btn btn-danger btn-block">Reset</button><br>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-12 col-xs-12"></div>
+                <div class="col-md-3 col-sm-12 col-xs-12">
+                    <div class="form-group text-right">
+                        <button onclick="searchTable()" class="btn btn-success btn-block">Search</button><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel p-20 m-10">
+
+    <div class="row">
+        <center><u><h3>Survey feedbacks List</h3></u></center>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8"></div>
+        <div class="col-md-2 pull-right btn-block">
+            <a href="@Url.Action("generateXmlFile","Admin", new{userId=-1})" id="generateXmlLink" class="btn btn-primary m-5 pull-right">Generate Xml</a>
+        </div>
+    </div>
+
+    
+
+    <div class="table-responsive">
+        <table class="table text-md-nowrap table-striped table-bordered text-center no-footer" id="DataTable">
+            <thead class="bg-indigo-800">
+                <tr>
+                    <th class="text-bold" hidden>...</th>
+                    <th class="text-bold text-center" style="min-width:140px;">
+                        Question 1
+                    </th>
+                    <th class="text-bold text-center" style="min-width:140px;">
+                        Question 2
+                    </th>
+                    <th class="text-bold text-center" style="min-width:140px;">
+                        Question 3
+                    </th>
+                    <th class="text-bold text-center" style="min-width:140px;">
+                        Question 4
+                    </th>
+                    <th class="text-bold text-center" style="min-width:140px;">
+                        User Name
+                    </th>
+                   
+                    <th class="text-bold text-center" style="min-width:130px">
+                        Action
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+<script>
+
+    loadTable();
+
+    function loadTable(userId) {
+        $('#DataTable').DataTable(
+            {
+                "ajax":
+                {
+                    "url": '@Url.Action("GetSurveyDataTableList", "Ajax")',
+                    "type": "POST",
+                    "datatype": "json",
+                    "data": { userId: userId }
+                },
+                'columns':
+                    [
+                        { "data": "hidden", "name": "0" },
+                        { "data": "Question1", "name": "Question1" }, // Replace "Name" with your actual property name
+                        { "data": "Question2", "name": "Question2" }, // Replace "Name" with your actual property name
+                        { "data": "Question3", "name": "Question3" },
+                        { "data": "Question4", "name": "Question4" },
+                        { "data": "UserName", "name": "UserName" },
+                        { "data": "Action", "name": "0" },
+                    ],
+                'columnDefs':
+                    [
+                        {
+                            "targets": 0,
+                            "visible": false,
+                            "searchable": false,
+                            "render": function (data, type, full, meta) {
+                                console.log(full);
+                                return null;
+                            }
+                        },
+                        {
+                            "targets": 1,
+                            'className': '',
+                            "render": function (data, type, full, meta) {
+
+                                return full.question1;
+                            }
+                        },
+                        {
+                            "targets": 2,
+                            'className': '',
+                            "render": function (data, type, full, meta) {
+
+                                return full.question2;
+                            }
+                        },
+                        {
+                            "targets": 3,
+                            'className': '',
+                            "render": function (data, type, full, meta) {
+
+                                return full.question3;
+                            }
+                        },
+                        {
+                            "targets": 4,
+                            'className': '',
+                            "render": function (data, type, full, meta) {
+
+                                return full.question4;
+                            }
+                        },
+                        {
+                            "targets": 5,
+                            'className': '',
+                            "render": function (data, type, full, meta) {
+                                var user = `<a href="/Admin/ViewUser?way=${full.userId}" class="dropdown-toggle" data - toggle="dropdown" >${full.userName}</a>`;
+                                return user;
+                                //return full.userName;
+                            }
+                        },
+                        {
+                            "targets": 6,
+                            'className': '',
+                            'sortable': false,
+                            "render": function (data, type, full, meta) {
+                                return '<ul class="icons-list"> ' +
+                                    '<li class="dropdown" >' +
+                                    '			<a href="#" class="dropdown-toggle" data-toggle="dropdown">' +
+                                    '				<i class="icon-menu9"></i>' +
+                                    '			</a>' +
+                                    '			<ul class="dropdown-menu dropdown-menu-right"  style="padding-left:5px !important; min-width:95px !important;">' +
+                                    '				<li>' +
+                                    '                   <button class="btn btn-sm bg-danger icon-bin" onclick="deleteFunction(\'' + full.id + '\')" title="Delete"></button>' +
+                                    '                   <button class="btn btn-sm bg-primary fa fa-file-code-o" style="font-size:15px;height:36px" onclick="generateXmlFile(\'' + full.id + '\')" title="Generate Xml"></button>' +
+                                    '               </li>' +
+                                    '			</ul>' +
+                                    '		</li >' +
+                                    '	</ul >';
+                            }
+                        },
+                    ],
+                "serverSide": "true",
+                "processing": "true",
+                "language":
+                {
+                    "processing": "<i class='icon-spinner spinner icon-2x'></i>",
+                    "search": "<span>Search :</span> _INPUT_",
+                    "searchPlaceholder": "Filter Data",
+                    "lengthMenu": "<span>Show :</span> _MENU_",
+                    "paginate": { 'first': 'First', 'last': 'Last', 'next': '&rarr;', 'previous': '&larr;' }
+                }
+            });
+    }
+
+    function updateFunction(id) {
+
+        $('#updSubBtn').attr('disabled', false);
+
+        $("#loadImg").show();
+
+        $.ajax({
+            type: 'POST',
+            url: "../BusinessCenter/GetBusinessCenterById",
+            dataType: "json",
+            data: {
+                id: id
+            },
+            success: function (response) {
+                if (response == 0) {
+                    alert("Record not found, Please reload the page.");
+                }
+                $("#updId").val("");
+                $("#Name").val("");
+                $("#updId").val(response.id);
+                $("#Name").val(response.name);
+                $('#NameErrMsg').text("");
+
+
+                $("#loadImg").hide();
+                $("#updateModal").modal('show');
+            },
+            error: function () {
+                $("#loadImg").hide();
+
+                alert("ajax Failed");
+            }
+        });
+
+    }
+
+
+
+    function deleteFunction(id) {
+        $('#confirmModalHeading').text('Warning!');
+        $('#confirmModalHeader').removeClass('bg-success');
+        $('#confirmModalHeader').addClass('bg-danger');
+        $('#confirmModalText').empty();
+        $('#confirmModalText').append('Do you really want to delete this Record?<br />' +
+            'This record is going to permanently delete from our system.<br />' +
+            'The action cannot be undone.');
+
+        $("#confirmModalForm").attr("action", "../Admin/DeleteResponse?id=" + id);
+
+        $('#confirmModal').modal('show');
+    }
+
+    function generateXmlFile(id) {
+       
+
+        //$("#confirmModalForm").attr("action", "../Admin/DeleteResponse?id=" + id);
+
+        location.href = "/Admin/generateXmlFile?id=" + id;
+    }
+
+</script>
+<script>
+    $('#manageBusinessCenterTab2').addClass('active');
+</script>
+
+@*<script>
+
+    const UpdateForm = document.getElementById('UpdateForm');
+    const uploadButton = document.getElementById('updSubBtn');
+    UpdateForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        uploadButton.disabled = true;
+        UpdateForm.submit();
+
+    });
+</script>*@
+@*<script>
+    function validateName(Name) {
+        var id = $('#updId').val();
+
+        if (Name != "") {
+            $.ajax({
+                type: 'POST',
+                url: "../BusinessCenter/validateName",
+                dataType: "json",
+                data:
+                {
+                    Name: Name, id: id
+                },
+                success: function (response) {
+                    if (response == true) {
+                        $('#NameErrMsg').text("");
+                        $('#updSubBtn').attr('disabled', false);
+
+                    }
+                    else {
+                        $('#NameErrMsg').text("Duplicate Name");
+                        $('#updSubBtn').attr('disabled', true);
+                    }
+                },
+                error: function () {
+                    $('#NameErrMsg').text("");
+                    $('#updSubBtn').attr('disabled', false);
+                    alert("Ajax failed");
+                }
+            });
+        }
+    }
+</script>*@
+
+<script>
+
+    function searchTable() {
+        var userId = $('#searchUserValue').val();
+
+        $('#DataTable').DataTable().clear();
+        $('#DataTable').DataTable().destroy();
+
+        updateGenerateXmlLink();
+        loadTable(userId);
+    }
+
+    function clearSearch() {
+        $('#DataTable').DataTable().clear();
+        $('#DataTable').DataTable().destroy();
+
+        $('#searchUserValue').val("").change();
+
+        var generateXmlLink = document.getElementById("generateXmlLink");
+
+        // Update the href attribute with the selected UserId
+        generateXmlLink.href = "/Admin/generateXmlFile?userId=" + -1;
+
+        loadTable();
+    }
+</script>
+
+<script>
+    function updateGenerateXmlLink() {
+        debugger;
+        var selectedUserId = document.getElementById("searchUserValue").value;
+        var generateXmlLink = document.getElementById("generateXmlLink");
+
+        // Update the href attribute with the selected UserId
+        generateXmlLink.href = "/Admin/generateXmlFile?userId=" + selectedUserId;
+    }
+</script>
+
